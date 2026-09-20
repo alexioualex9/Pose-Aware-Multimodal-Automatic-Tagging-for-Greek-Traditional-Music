@@ -1,0 +1,39 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE settings
+.vscode/
+.idea/
+
+# Secrets
+.env
+.env.*
+*.key
+credentials.json
+
+# Python/Jupyter caches
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+
+# ML outputs and checkpoints
+outputs/
+checkpoints/
+runs/
+wandb/
+*.pth
+*.pt
+*.ckpt
+
+# Data
+data/
+datasets/
