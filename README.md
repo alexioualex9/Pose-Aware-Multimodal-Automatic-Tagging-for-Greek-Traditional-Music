@@ -46,6 +46,25 @@ The implemented framework supports automatic tagging on the **top-28 labels of t
 
 ---
 
+## Dataset
+
+All experiments in this thesis are based on the **Lyra Dataset**, a dataset of Greek traditional music performances annotated with multilabel semantic tags.
+
+The full Lyra collection contains **1570 videos**. Among them, **767 videos include dancing** and form the initial **dance subset**. Since the pose-aware setting requires at least one valid extracted skeleton clip per video, the skeleton extraction and filtering stage reduces this subset to **749 videos**, referred to as the **skeleton subset**.
+
+Following prior work on Lyra, this project begins from the **top-30 most frequent labels**. However, in the skeleton subset, two of these labels have zero positive support, so all experiments in this repository are conducted on the remaining **28 labels**.
+
+Depending on the experiment, the code may require:
+
+- video recordings,
+- annotation or label files,
+- pretrained checkpoints,
+- metadata associated with the Lyra Dataset.
+
+This repository does **not necessarily include the raw datasets** used in the experiments. Users are expected to provide their own local data paths and organize the required files according to the input requirements of each script.
+
+---
+
 ## Usage
 
 ### Train the Dance-Scene Detector
