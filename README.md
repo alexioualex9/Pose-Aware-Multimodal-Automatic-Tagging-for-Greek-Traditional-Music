@@ -215,49 +215,6 @@ python -m mutimodal/transfomrer.py --dataset "lyra" --time_window "8.00" {--subs
 
 ---
 
-## Outputs
-
-Depending on the selected script, the repository may produce:
-
-- extracted skeleton or pose representations,
-- detected dance-scene intervals,
-- skeleton embedding files,
-- video embedding files,
-- trained model checkpoints,
-- prediction files,
-- evaluation reports.
-
----
-
-## Reproducibility
-
-Placeholders such as the following should be replaced with user-specific values:
-
-- `<VIDEO_DIR>`
-- `<LABELS_FILE>`
-- `<OUTPUT_DIR>`
-- `<MODEL_PATH>`
-- `<NUM_EPOCHS>`
-
----
-
-
-## Academic Context
-
-This repository was developed in the context of academic research on **multimodal analysis** and **automatic tagging**.
-
-It is intended to support experimental work on:
-
-- dance-related visual cues,
-- pose-derived motion representations,
-- skeleton-based sequence modeling,
-- unimodal learning pipelines,
-- multimodal fusion strategies for semantic music-performance tagging.
-
-More broadly, the project contributes to the study of **culturally grounded MIR**, where musical meaning is distributed across sound, image, and embodied performance.
-
----
-
 ## Citation
 
 If you use this repository in academic work, please cite the corresponding thesis and/or paper once available.
