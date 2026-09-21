@@ -1,4 +1,4 @@
-# Pose-Aware Multimodal Automatic Tagging on Greek Traditional Music
+# Pose-Aware Multimodal Automatic Tagging
 
 This repository contains the code developed for the thesis project **“Pose-Aware Multimodal Automatic Tagging”**.
 
