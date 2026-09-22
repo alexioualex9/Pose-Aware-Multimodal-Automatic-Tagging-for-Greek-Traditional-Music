@@ -2,14 +2,7 @@
 
 This repository contains the code developed for the paper **“Pose-Aware Multimodal Automatic Tagging”**.
 
-The project investigates whether **pose-derived motion information**, together with **audio** and **video**, can improve the **automatic tagging of Greek traditional music performances**. It explores how embodied performance cues such as **dance movement**, **posture**, and **visual context** can complement acoustic information in a culturally grounded music information retrieval setting.
-
-The repository includes code for:
-
-- **dance-scene detection**,
-- **skeleton extraction from in-the-wild videos**,
-- **unimodal processing pipelines** for audio, video, and skeleton modalities, and
-- **multimodal fusion** across all combinations of audio, video, and skeleton representations.
+The project investigates whether **pose-derived motion information**, together with **audio** and **video**, can improve the **automatic tagging**. It explores how embodied performance cues such as **dance movement**, **posture**, and **visual context** can complement acoustic information in a culturally grounded music information retrieval setting.
 
 The implemented framework supports automatic tagging on the **top-28 labels of the Lyra Dataset**, using both unimodal and multimodal models.
 
