@@ -1,0 +1,25 @@
+-r requirements.txt
+
+# Dance-scene detection
+scenedetect==0.6.5.2
+
+# Pose estimation and tracking
+alphapose @ git+https://github.com/MVIG-SJTU/AlphaPose.git@c60106d19afb443e964df6f06ed1842962f5f1f7
+yolox @ git+https://github.com/ifzhang/ByteTrack.git@d1bf0191adff59bc8fcfeaa0b33d3d1642552a99
+
+# COCO APIs and compiled extensions
+cython_bbox @ git+https://github.com/yanfengliu/cython_bbox.git@e7b95b6dc0933b10bd0ec02b90755a12ca996c68
+halpecocotools @ git+https://github.com/HaoyiZhu/HalpeCOCOAPI.git@139a9295fa6ec3a4439014f2a12c026c9ff6c0b6#subdirectory=PythonAPI
+pycocotools @ git+https://github.com/philferriere/cocoapi.git@2929bd2ef6b451054755dfd7ceb09278f935f7ad#subdirectory=PythonAPI
+
+# Pose and tracking utilities
+Cython==0.29.36
+mmcv-full==1.7.2
+lap==0.5.12
+easydict==1.13
+addict==2.4.0
+loguru==0.7.3
+motmetrics==1.4.0
+terminaltables==3.1.10
+termcolor==2.4.0
+yacs==0.1.8

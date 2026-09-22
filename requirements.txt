@@ -1,0 +1,31 @@
+# Numerical computing and evaluation
+numpy==1.23.5
+scipy==1.10.1
+pandas==2.0.3
+scikit-learn==1.3.2
+
+# Deep learning
+torch==2.2.0
+torchaudio==2.2.0
+torchvggish==0.2
+torchvision==0.17.0
+
+# Audio
+librosa==0.11.0
+soundfile==0.13.1
+
+# Video
+opencv-python==4.10.0.84
+av==12.3.0
+decord==0.6.0
+ffmpeg-python==0.2.0
+pytorchvideo==0.1.5
+
+# Models and general utilities
+transformers==4.46.3
+timm==0.4.5
+
+# Utilities and visualazation
+tqdm==4.67.1
+matplotlib==3.7.5
+seaborn==0.13.2

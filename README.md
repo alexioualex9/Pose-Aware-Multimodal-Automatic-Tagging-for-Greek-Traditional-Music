@@ -1,6 +1,6 @@
 # Pose-Aware Multimodal Automatic Tagging
 
-This repository contains the code developed for the thesis project **“Pose-Aware Multimodal Automatic Tagging”**.
+This repository contains the code developed for the paper **“Pose-Aware Multimodal Automatic Tagging”**.
 
 The project investigates whether **pose-derived motion information**, together with **audio** and **video**, can improve the **automatic tagging of Greek traditional music performances**. It explores how embodied performance cues such as **dance movement**, **posture**, and **visual context** can complement acoustic information in a culturally grounded music information retrieval setting.
 
@@ -16,18 +16,6 @@ The implemented framework supports automatic tagging on the **top-28 labels of t
 ---
 
 ## Repository Structure
-
-```text
-.
-├── detect_dance_scenes/
-├── extract_skeletons/
-├── skeletons/
-├── video/
-├── multimodal/
-└── README.md
-```
-
-### Folder Description
 
 - **detect_dance_scenes/**  
   Training and inference code for identifying dance-related scenes in video recordings.
@@ -46,9 +34,34 @@ The implemented framework supports automatic tagging on the **top-28 labels of t
 
 ---
 
+## Installation
+
+The project was developed using **Python 3.8.20**, **PyTorch 2.2.0**, and **CUDA 11.8**.
+
+Install the dependencies required for training and evaluation:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+For dance-scene detection and skeleton extraction, install the additional dependencies:
+
+```bash
+python -m pip install -r requirements_pose.txt
+```
+
+The pose-extraction pipeline uses the following pretrained configurations and checkpoints:
+
+- AlphaPose config: `configs/coco/resnet/256x192_res50_lr1e-3_1x.yaml`
+- AlphaPose checkpoint: `pretrained_models/fast_res50_256x192.pth`
+- ByteTrack config: `exps/example/mot/yolox_x_mix_det.py`
+- ByteTrack checkpoint: `pretrained/bytetrack_x_mot17.pth.tar`
+
+AlphaPose and ByteTrack are installed from the exact Git commits specified in `requirements_pose.txt`. Their pretrained checkpoints are not included in this repository and must be downloaded from their official repositories. Local paths to datasets, external repositories, and checkpoints must be specified in the corresponding configuration files.
+
 ## Dataset
 
-All experiments in this thesis are based on the **Lyra Dataset**, a dataset of Greek traditional music performances annotated with multilabel semantic tags.
+All experiments in this paper are based on the **Lyra Dataset**, a dataset of Greek traditional music performances annotated with multilabel semantic tags.
 
 The full Lyra collection contains **1570 videos**. Among them, **767 videos include dancing** and form the initial **dance subset**. Since the pose-aware setting requires at least one valid extracted skeleton clip per video, the skeleton extraction and filtering stage reduces this subset to **749 videos**, referred to as the **skeleton subset**.
 
