@@ -29,7 +29,7 @@ The implemented framework supports automatic tagging on the **top-28 labels of t
 
 ## Installation
 
-The project was developed using **Python 3.8.20**, **PyTorch 2.2.0**, and **CUDA 11.8**.
+The project was developed using **Python 3.8.20** and **PyTorch 2.2.0** with **CUDA 11.8**.
 
 Install the dependencies required for training and evaluation:
 
@@ -56,7 +56,7 @@ AlphaPose and ByteTrack are installed from the exact Git commits specified in `r
 
 All experiments in this paper are based on the **Lyra Dataset**, a dataset of Greek traditional music performances annotated with multilabel semantic tags.
 
-The full Lyra collection contains **1570 videos**. Among them, **767 videos include dancing** and form the initial **dance subset**. Since the pose-aware setting requires at least one valid extracted skeleton clip per video, the skeleton extraction and filtering stage reduces this subset to **749 videos**, referred to as the **skeleton subset**.
+The full Lyra collection contains **1570 videos**. Among them, **767 videos include dancing**. Since the pose-aware setting requires at least one valid extracted skeleton clip per video, the skeleton extraction and filtering stage reduces this subset to **749 videos**, referred to as the **pose subset of Lyra dataset**.
 
 Following prior work on Lyra, this project begins from the **top-30 most frequent labels**. However, in the skeleton subset, two of these labels have zero positive support, so all experiments in this repository are conducted on the remaining **28 labels**.
 
