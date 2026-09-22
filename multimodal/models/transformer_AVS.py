@@ -342,7 +342,6 @@ class EmbCLSFusionTransformerAVSMasked_gate(nn.Module):
 
         # 1) Original-style 3-modal GMU fusion
         z_a_, z_v_, z_s_, h, gates, h_a, h_v, h_s, h_s_raw, mask_s_used = self.fusion(
-#        h, gates = self.fusion(
             emb_a=emb_a,
             emb_v=emb_v,
             emb_s=emb_s,
@@ -383,8 +382,6 @@ class EmbCLSFusionTransformerAVSMasked_gate(nn.Module):
                 "skeleton": gates["skeleton"].squeeze(-1),
             }
             return logits, aux_logits, aux_present, gates, weights, z_a_, z_v_, z_s_, h_a, h_v, h_s, h_s_raw
-#            return logits, gates, weights
-#        return logits, aux_logits, aux_present
         return logits
 
 

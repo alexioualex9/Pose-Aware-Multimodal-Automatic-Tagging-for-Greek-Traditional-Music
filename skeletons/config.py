@@ -44,8 +44,6 @@ MODELS_CONFIG = {
         'warmup_epochs': 3,
         'grad_clip': 1.0,
         'dropout': 0.2,
-
-
         'epochs': 30,
         'batch_size' : 32,
         'lr': 3e-4,
@@ -59,8 +57,5 @@ MODELS_CONFIG = {
         'root': 11,
         'loss': nn.BCEWithLogitsLoss(),
         'optimizer': "AdamW",
-
-
-        'ctrgcn_cin': 512,
      },
 }

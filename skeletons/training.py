@@ -69,7 +69,5 @@ def train(args):
        config=config,
    )
 
-    #print(model)
-
     # Training
     train_model(model, train_loader, val_loader, config)

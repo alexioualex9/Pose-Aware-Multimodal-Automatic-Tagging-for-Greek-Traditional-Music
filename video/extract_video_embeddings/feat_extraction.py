@@ -78,12 +78,12 @@ def extract_clip_embedding_timesformer(
     dtype: str = "fp16",
 ):
     """
-    - Διαβάζει τις εικόνες [C,T,H,W] από EncodedVideo.get_clip
-    - Uniform temporal subsample σε num_frames
-    - Μετατρέπει σε λίστα από HWC uint8 frames
+    - Input: images [C,T,H,W] from EncodedVideo.get_clip
+    - Uniform temporal subsample into num_frames
+    - Convert into a list from HWC uint8 frames
     - HuggingFace transform -> pixel_values [1, T, C, H, W]
-    - forward στο TimesformerModel
-    - Παίρνουμε CLS embedding από last_hidden_state[:,0,:]  -> [D]
+    - forward into TimesformerModel
+    - Output: CLS embedding from last_hidden_state[:,0,:]  -> [D]
     """
     video = EncodedVideo.from_path(video_path)
     clip = video.get_clip(start_sec=float(start_sec), end_sec=float(end_sec))
@@ -207,7 +207,7 @@ def extract_clip_embedding_2d(
             imgs = []
             for j in range(chunk.shape[1]):
                 img = chunk[:, j].permute(1, 2, 0).cpu().numpy()
-                # PIL needs HWC uint8 (usually)
+                # PIL needs HWC uint8
                 if img.dtype != np.uint8:
                    # If 0..1 float, scale to 0..255
                    if img.max() <= 1.0:
@@ -265,7 +265,7 @@ def extract_clip_embedding_r21d(
 
     vt = torch.as_tensor(vt)
 
-    # (optional but good): ensure uint8 0..255 because weights transforms rescale internally
+    # ensure uint8 0..255 because weights transforms rescale internally
     if vt.dtype != torch.uint8:
         # if float 0..1 -> scale; if already 0..255 float -> just clamp
         mx = float(vt.max())
@@ -395,8 +395,6 @@ def extract_clip_embedding_videomae(
     else:
         out = model(pixel_values=pv)
 
-    #hs = out.last_hidden_state  # tuple(len = num_layers+1)
-    #tokens = hs[layer_idx]  # (B, N, D)
     tokens = out.last_hidden_state
 
     if use_cls:

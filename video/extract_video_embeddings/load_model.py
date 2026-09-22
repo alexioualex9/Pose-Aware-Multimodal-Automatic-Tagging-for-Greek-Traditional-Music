@@ -43,9 +43,9 @@ def load_pretrained_timesformer(
     device: str = "cuda",
 ):
     """
-    Φορτώνει TimeSformer από HuggingFace:
-      - TimesformerModel (χωρίς ταξινομητή)
-      - AutoImageProcessor (responsible για resize/crop/normalize)
+    Loads TimeSformer from HuggingFace:
+      - TimesformerModel (without a classifier)
+      - AutoImageProcessor (responsible for resize/crop/normalize)
     """
     print(f"[info] Loading HF TimeSformer model: {model_name}")
     processor = AutoImageProcessor.from_pretrained(model_name)
@@ -56,10 +56,9 @@ def load_pretrained_timesformer(
 
 def make_backbone_return_embeddings_timesformer(model: nn.Module) -> int:
     """
-    Το TimesformerModel ήδη ΔΕΝ έχει classification head (σε αντίθεση με ForVideoClassification).
-    Άρα απλά θα παίρνουμε CLS embedding από last_hidden_state.
+    Get CLS embedding from last_hidden_state.
     """
-    # Hidden size από config (συνήθως 768)
+    # Hidden size from config
     if hasattr(model, "config") and hasattr(model.config, "hidden_size"):
         return int(model.config.hidden_size)
     else:
@@ -115,24 +114,23 @@ def load_vitb16_imagenet(device="cuda"):
 
 class VideoMAEWrapper(nn.Module):
     """
-    Wrapper για VideoMAE:
-    - Διαβάζει frames (decord/cv2) ως HWC uint8 RGB
-    - Καλεί σωστά τον VideoMAEImageProcessor (συμβατότητα νέου/παλιού API)
-    - Κανονικοποιεί σε (B, T, C, H, W) με C=3
-    - Επιστρέφει embedding από **το 9ο block** (hidden_states[9]) με **mean-pooling στα patch tokens**
+    Wrapper for VideoMAE:
+    - Read frames (decord/cv2) as HWC uint8 RGB
+    - VideoMAEImageProcessor
+    - Convert into (B, T, C, H, W) with C=3
+    - Return embedding from **9th block** (hidden_states[9]): **mean-pooling into patch tokens**
     """
     def __init__(
         self,
         model_name: str = "MCG-NJU/videomae-base",
         device: str = "cuda",
-        layer_idx: int = -1,       # 1-based index του block
-        use_cls: bool = False,     # False => mean-pool των patch tokens
+        layer_idx: int = -1,       # block's 1-based index
+        use_cls: bool = False,     # False => mean-pool of patch tokens
     ):
         super().__init__()
         if not _HAS_HF:
             raise RuntimeError("transformers not installed. `pip install transformers`")
         self.processor = VideoMAEImageProcessor.from_pretrained(model_name)
-        # ΠΡΟΣΟΧΗ: output_hidden_states=True για να πάρουμε ενδιάμεσα layers
         self.model = VideoMAEModel.from_pretrained(
             model_name,
             output_hidden_states=True
@@ -142,8 +140,8 @@ class VideoMAEWrapper(nn.Module):
         self.hidden = int(self.model.config.hidden_size)
         self.want_c = int(getattr(self.model.config, "num_channels", 3))
 
-        # Ρυθμίσεις επιλογής layer/pooling
-        self.layer_idx = int(layer_idx)   # 1..num_blocks (12 για base)
+        # Choose layer/pooling
+        self.layer_idx = int(layer_idx)   # 1..num_blocks
         self.use_cls = bool(use_cls)
 
     @staticmethod
@@ -164,7 +162,7 @@ class VideoMAEWrapper(nn.Module):
         dtype: str = "fp16",
         mode: str = "eval",
     ):
-        # 1) σύνολο frames & fps
+        # 1) set of frames & fps
         if _HAS_DECORD:
             decord.bridge.set_bridge("native")
             vr = decord.VideoReader(video_path)
@@ -197,7 +195,7 @@ class VideoMAEWrapper(nn.Module):
         if idxs.size == 0:
             return torch.zeros(self.hidden)
 
-        # 3) διάβασμα frames ως HWC uint8 RGB
+        # 3) read frames as HWC uint8 RGB
         if _HAS_DECORD:
             idxs_clip = np.clip(idxs, 0, total - 1).tolist()
             batch = vr.get_batch(idxs_clip)            # (T,H,W,3) uint8
@@ -234,32 +232,30 @@ class VideoMAEWrapper(nn.Module):
         elif frames.shape[-1] > 3:
             frames = frames[..., :3]
 
-        # 4) processor call: νέο/παλιό API
+        # 4) processor call
         frames_list = [np.ascontiguousarray(fr) for fr in frames]  # len=T, κάθε ένα HWC uint8
         try:
-            # ΝΕΟ API (videos=...)
             batch = self.processor(videos=[frames_list], return_tensors="pt")
         except TypeError:
-            # ΠΑΛΙΟ API (positional images)
             batch = self.processor([frames_list], return_tensors="pt")
 
         pv = batch["pixel_values"]  # (B,T,C,H,W) ή (B,C,T,H,W) ή (T,C,H,W)
 
-        # 5) Κανονικοποίηση σε (B, T, C, H, W) + C=3
+        # 5) Convert into (B, T, C, H, W) + C=3
         if pv.ndim == 4:  # (T,C,H,W) -> (1,T,C,H,W)
             pv = pv.unsqueeze(0)
 
         if pv.ndim != 5:
             return torch.zeros(self.hidden)
 
-        # Αν είναι (B,C,T,H,W) -> (B,T,C,H,W)
+        # If (B,C,T,H,W) -> (B,T,C,H,W)
         if pv.shape[1] == self.want_c and pv.shape[2] != self.want_c:
             pv = pv.permute(0, 2, 1, 3, 4)
-        # Αν είναι (B,T,H,W,C) -> (B,T,C,H,W)
+        # If (B,T,H,W,C) -> (B,T,C,H,W)
         elif pv.shape[-1] == self.want_c and pv.shape[2] != self.want_c:
             pv = pv.permute(0, 1, 4, 2, 3)
 
-        # Τελικός έλεγχος καναλιών στον άξονα 2
+        # Check number of channels
         if pv.shape[2] != self.want_c:
             if pv.shape[2] == 1 and self.want_c == 3:
                 pv = pv.repeat(1, 1, 3, 1, 1)
@@ -270,27 +266,27 @@ class VideoMAEWrapper(nn.Module):
 
         pixel_values = pv.to(self.device)  # (B,T,C,H,W), C=3
 
-        # 6) Forward (με hidden states)
+        # 6) Forward
         use_amp = dtype in ("fp16", "bf16") and self.device.startswith("cuda")
         amp_dtype = torch.bfloat16 if dtype == "bf16" else torch.float16
         ctx = torch.autocast(device_type="cuda", dtype=amp_dtype) if use_amp else torch.cuda.amp.autocast(False)
         with ctx:
             out = self.model(pixel_values=pixel_values)
 
-        # 7) Πάρε το τελευταιο block (1-based → hidden_states[-1])
-        hs = out.hidden_states  # len = num_blocks+1, hs[0] = embeddings πριν τα blocks
+        # 7) Get last block (1-based → hidden_states[-1])
+        hs = out.hidden_states  # len = num_blocks+1, hs[0] = embeddings before blocks
         if not (1 <= self.layer_idx < len(hs)):
-            # safety: αν layer_idx εκτός ορίων, πάρε το τελευταίο block
+            # safety: if layer_idx out of limits, get last block
             layer_idx = len(hs) - 1
         else:
             layer_idx = self.layer_idx
 
         tokens = hs[layer_idx]                 # (B, N_tokens, D)
-        # 8) Pooling: mean πάνω στα patch tokens (αγνοούμε το CLS)
+        # 8) Pooling: mean into patch tokens (ignore CLS)
         if self.use_cls:
             emb = tokens[:, 0, :].squeeze(0)     # CLS
         else:
-            emb = tokens[:, 1:, :].mean(dim=1).squeeze(0)  # mean των patch tokens
+            emb = tokens[:, 1:, :].mean(dim=1).squeeze(0)  # mean of patch tokens
 
         # 9) dtype cast & return
         target_dtype = {

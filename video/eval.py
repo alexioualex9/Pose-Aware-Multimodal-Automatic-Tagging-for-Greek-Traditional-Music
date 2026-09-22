@@ -34,7 +34,7 @@ except ImportError:
         yield
 
 
-# κρύψε TF32 warnings όταν δεν είμαστε σε CUDA
+# hide TF32 warnings when not using CUDA
 if not torch.cuda.is_available():
     warnings.filterwarnings("ignore", message=".*TF32.*", category=UserWarning)
 

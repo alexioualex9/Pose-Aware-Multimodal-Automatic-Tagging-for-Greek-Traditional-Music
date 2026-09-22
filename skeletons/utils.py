@@ -13,7 +13,6 @@ from helpers.mlp_head import MLPHead
 
 
 
-
 COCO17_EDGES = [
     (0, 1), (0, 2),
     (1, 3), (2, 4),
@@ -87,10 +86,9 @@ def build_coco17_A_subsets(root: int = 11) -> torch.Tensor:
     A = normalize_digraph(A)
     return torch.tensor(A, dtype=torch.float32)
 
+
 # Save metrics in a .txt file
 def save_metrics(metrics, out_dir, model_name, dataset, split):
-    #out = Path(out_dir)
-    #out.mkdir(parents=True, exist_ok=True)
 
     # TXT classification report
     with open(out_dir, "w", encoding="utf-8") as f:
@@ -130,7 +128,6 @@ def return_model(model_name: str, C_out: int, C_in: int, config: dict):
     """
     model_name:
       - "stgcn"  -> STGCNModel
-      - "ctrgcn_emb" -> head πάνω σε embeddings (π.χ. 256-dim)
     """
     return STGCNModel(
          num_class=C_out,
@@ -175,14 +172,13 @@ def compute_global_metrics(Y, S, threshold, label_names):
 def test_results(m, model_name=None, dataset=None, split="test",
                  auc_kind="macro", decimals=2):
     """
-    m: dict με keys όπως: report, roc_micro, roc_macro, pr_micro, pr_macro
-    auc_kind: "macro" ή "micro" -> ποιο AUC να τυπώσει (στο παράδειγμα σου είναι macro)
+    m: dict: report, roc_micro, roc_macro, pr_micro, pr_macro
     """
 
     if model_name is not None and dataset is not None:
         print(f'\nEvaluation of model "{model_name}" on "{dataset}" {split} set:')
     else:
-        # fallback αν δεν δώσεις ονόματα
+        # fallback if names are not given
         print(f"\nEvaluation results ({split} set):")
 
     roc_key = f"roc_{auc_kind}"
@@ -194,11 +190,9 @@ def test_results(m, model_name=None, dataset=None, split="test",
         print(f"PR-AUC score: {m[pr_key]}")
     print()
 
-    # Μορφοποίηση classification report σε 2 δεκαδικά όπως στο παράδειγμα
+    # Convert classification report into 2 decimals
     report = m.get("report", "")
     if isinstance(report, str) and report:
-        # sklearn classification_report έχει "0.7500" κτλ.
-        # το κάνουμε "0.75" και κρατάμε στοίχιση όσο γίνεται.
         import re
         def _fmt(match):
             return f"{float(match.group(0)):.{decimals}f}"

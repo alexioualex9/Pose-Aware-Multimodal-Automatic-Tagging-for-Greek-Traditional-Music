@@ -34,6 +34,7 @@ from video.extract_video_embeddings.load_model import (
             load_vitb16_imagenet,
             load_pretrained_videomae,
             )
+from config import DATA_DIR, top_N, val_ratio
 
 import warnings
 if not torch.cuda.is_available():
@@ -68,7 +69,6 @@ def main():
     # RNG
     random.seed(args.seed)
 
-    # Χρησιμοποίησε MPS αν υπάρχει (Mac GPU), αλλιώς CUDA, αλλιώς CPU
     if torch.backends.mps.is_available():
         device = "mps"
     elif torch.cuda.is_available():
@@ -76,23 +76,14 @@ def main():
     else:
         device = "cpu"
 
-
-    ######## SHOULD BE PLACED IN A config.py TYPE OF FILE. ########
-    top_N = 30
-    data_dir = "/data/datasets/mir_datasets/lyra"
-    val_ratio = 0.1
-    ###############################################################
-
-
-    #config = MODELS_CONFIG[args.dataset].copy()
     config = dict()
     config['dataset'] = args.dataset
-    config['data_dir'] = Path(data_dir)
+    config['DATA_DIR'] = Path(DATA_DIR)
     config['model_name'] = args.model_name
     config['audio_model_name'] = args.audio_model_name
     config['device'] = torch.device(device)
     config['video_template'] = "{id}.mp4"
-    config['video_dir'] = config['data_dir'] / "videos"
+    config['video_dir'] = config['DATA_DIR'] / "videos"
 
     # Define save path
     ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -109,19 +100,19 @@ def main():
         labels = json.load(open(labels_json_path))["labels"]
         print(f"[info] Loaded canonical labels.json from {labels_json_path} ({len(labels)} labels)")
     else:
-        labels = build_topN_labels_from_training_tsv(str(config['data_dir']), top_N=top_N)
+        labels = build_topN_labels_from_training_tsv(str(config['DATA_DIR']), top_N=top_N)
         json.dump({"labels": labels}, open(labels_json_path, "w"), indent=2)
         print(f"[info] Built & saved canonical labels.json at {labels_json_path} ({len(labels)} labels)")
     C = len(labels)
 
     # Split IDs
-    train_ids_all = load_training_ids(config['data_dir'])
+    train_ids_all = load_training_ids(config['DATA_DIR'])
     train_ids_resolved, val_ids_resolved = split_train_val_ids(train_ids_all, val_ratio, args.seed)
-    test_ids_resolved = load_test_ids(config['data_dir'])
+    test_ids_resolved = load_test_ids(config['DATA_DIR'])
 
     # Label maps per table
-    vid2lab_train = _build_vid2lab_from_tsv(config['data_dir'] / "split" / "training.tsv", labels)
-    vid2lab_test  = _build_vid2lab_from_tsv(config['data_dir'] / "split" / "test.tsv", labels)
+    vid2lab_train = _build_vid2lab_from_tsv(config['DATA_DIR'] / "split" / "training.tsv", labels)
+    vid2lab_test  = _build_vid2lab_from_tsv(config['DATA_DIR'] / "split" / "test.tsv", labels)
 
     # Number of Frames that should be used according to model used
     num_frames = compute_num_frames(config['model_name'])
@@ -163,8 +154,8 @@ def main():
        transform_eval  = None
 
     # Load tables
-    df_training = pd.read_csv(config['data_dir'] / "split" / "training.tsv", sep="\t", keep_default_na=False)
-    df_test     = pd.read_csv(config['data_dir'] / "split" / "test.tsv",     sep="\t", keep_default_na=False)
+    df_training = pd.read_csv(config['DATA_DIR'] / "split" / "training.tsv", sep="\t", keep_default_na=False)
+    df_test     = pd.read_csv(config['DATA_DIR'] / "split" / "test.tsv",     sep="\t", keep_default_na=False)
 
     # Model in eval mode
     model.eval()

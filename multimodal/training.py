@@ -4,16 +4,6 @@ import os
 import math
 from config import MODELS_DIR
 
-#def swap_np(x, i, j):
-#    x = x.copy()
-#    x[i], x[j] = x[j], x[i]
-#    return x
-
-#def swap_torch(x, i , j):
-#    x = x.clone()
-#    x[i], x[j] = x[j].clone(), x[i].clone()
-#    return x
-
 def swap_np(x, i, j):
     x = x.copy()
     if x.ndim == 1:          # [C]
@@ -113,17 +103,6 @@ def train_transformer(train_loader, val_loader, model, mean_t, std_t, config, su
                 y = y.to(config['device'])
                 valid_mask = valid_mask.to(config['device'])
                 logits = model(emb_a, emb_v, valid_mask=valid_mask)
-
-
-#            if not torch.isfinite(logits).all():
-#               print("NON-FINITE LOGITS!", torch.isnan(logits).any().item(), torch.isinf(logits).any().item())
-#               print("logits min/max:", logits.min().item(), logits.max().item())
-#               raise SystemExit
-
-
-            loss = criterion(logits, y)
-#            if getattr(model, "last_gate_reg", None) is not None:
-#                loss = loss + model.lambda_gate * model.last_gate_reg
 
             optimizer.zero_grad(set_to_none=True)
             loss.backward()

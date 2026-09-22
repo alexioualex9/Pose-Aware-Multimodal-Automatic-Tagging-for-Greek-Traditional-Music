@@ -15,7 +15,7 @@ from video.extract_video_embeddings.emb_utils import get_duration, iter_windows_
 
 sys.path.append(os.path.join(
     os.path.dirname(__file__),
-    '/home/alexalexiou/Unimodals/'
+    '/../Unimodals/'
 ))
 
 from ccml.config import SPECTROGRAMS_ATTRIBUTES, MODELS_CONFIG
@@ -23,7 +23,6 @@ from ccml.config import SPECTROGRAMS_ATTRIBUTES, MODELS_CONFIG
 
 
 def _np_dtype_for_storage(dtype: str):
-    # numpy δεν υποστηρίζει παντού bf16, άρα αποθηκεύουμε fp16 για fp16/bf16
     return np.float32 if dtype == "fp32" else np.float16
 
 
@@ -35,7 +34,7 @@ def extract_emb(
     vid2lab: Dict[str, np.ndarray],
     labels: List[str],
     out_dir: Path,
-    extract_fn: Callable[..., "Any"],      # επιστρέφει torch.Tensor [D]
+    extract_fn: Callable[..., "Any"],
     extract_kwargs: Optional[Dict[str, Any]] = None,
     dtype: str,
     num_frames: int,
@@ -85,7 +84,7 @@ def extract_emb(
             continue
 
         mel_file = os.path.join(mel_root, f"{vid_id}.npy")
-        mel = np.load(mel_file)  # ή όπως το φορτώνεις
+        mel = np.load(mel_file)
         n_mel_frames = mel.shape[1]
 
         y = vid2lab.get(vid_id, np.zeros(C, dtype=np.float32))

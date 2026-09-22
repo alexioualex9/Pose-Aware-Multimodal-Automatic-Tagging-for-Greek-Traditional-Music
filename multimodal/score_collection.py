@@ -36,9 +36,6 @@ def collect_video_scores_av(model: nn.Module, loader: DataLoader, device: str, s
         valid_mask = valid_mask.to(device)
 
         logits = model(emb_a, emb_v, valid_mask=valid_mask)
-
-#        out = model(emb_a, emb_v, emb_s, mask_s, valid_mask=valid_mask)
-#        logits = out[0] if isinstance(out, (tuple, list)) else out
         s = torch.sigmoid(logits).cpu().numpy()
 
         if subset:
@@ -67,13 +64,8 @@ def collect_video_scores_avs(model: nn.Module, loader: DataLoader, device: str, 
         mask_s = mask_s.to(device)
         valid_mask = valid_mask.to(device)
 
-        #logits, _ = model(emb_a, emb_v, emb_s, mask_s, valid_mask=valid_mask)
-
         out = model(emb_a, emb_v, emb_s, mask_s, valid_mask=valid_mask)
         logits = out[0] if isinstance(out, (tuple, list)) else out
-
-
-
         s = torch.sigmoid(logits).cpu().numpy()
 
         if subset:
@@ -83,7 +75,6 @@ def collect_video_scores_avs(model: nn.Module, loader: DataLoader, device: str, 
           y = swap_torch(y, 22, 23)
           s = swap_np(s, 22, 23)
 
-        #vids.append(vid[0] if isinstance(vid, (list, tuple)) else vid)
         vids.extend(list(vid) if isinstance(vid, (list, tuple)) else [vid])
         Y_list.append(y.cpu().numpy())
         S_list.append(s)
@@ -104,9 +95,6 @@ def collect_video_scores_as(model: nn.Module, loader: DataLoader, device: str, s
         valid_mask = valid_mask.to(device)
 
         logits = model(emb_a, emb_s, mask_s, valid_mask=valid_mask)
-#        out = model(emb_a, emb_s, mask_s, valid_mask=valid_mask)
-#        logits = out[0] if isinstance(out, (tuple, list)) else out
-
         s = torch.sigmoid(logits).cpu().numpy()
 
         if subset:
@@ -136,9 +124,6 @@ def collect_video_scores_vs(model: nn.Module, loader: DataLoader, device: str, s
         emb_a = emb_v
 
         logits = model(emb_v, emb_s, mask_s, valid_mask=valid_mask)
-
-#        out = model(emb_a, emb_v, emb_s, mask_s, valid_mask=valid_mask)
-#        logits = out[0] if isinstance(out, (tuple, list)) else out
         s = torch.sigmoid(logits).cpu().numpy()
 
         if subset:

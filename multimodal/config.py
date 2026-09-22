@@ -358,25 +358,3 @@ MODELS_CONFIG = {
 
     },
 }
-
-#              'AVS': {
-#                   'top_N_tags': 28,
-#                   'dropout': 0.2,
-#                   'LR': 3e-5,
-#                   'batch_size': 64,
-#                   'epochs': 100,
-#                   'attn_layers': 1,
-#                   'attn_heads': 4,
-#                   'd_model': 256,
-#                   'max_clips': 200,
-#                   'alpha': 1,
-#                   'p_drop_v_seq': 0.05,
-#                   'use_missing_v_token': True,
-#                   'early_stopping_patience': None,
-#                   'num_workers': 0,
-#                   'weight_decay': 1e-4,
-#                   'loss_function': nn.BCEWithLogitsLoss(),
-#                   'optimizer': "AdamW",
-                   #'scheduler': "cosine_decay",
-#              },
-

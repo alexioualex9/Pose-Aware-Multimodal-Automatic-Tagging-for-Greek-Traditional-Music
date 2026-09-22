@@ -86,16 +86,16 @@ def split_train_val_ids(all_train_ids: List[str], val_ratio: float, seed: int) -
 # Windowing helpers (drop tail)
 # -----------------------------
 def iter_windows_like_split_spectrogram(
-    split_length: int,          # ίδιο με test_dataset.input_length
+    split_length: int,
     n_mel_frames,
     sr: int = 16000,
     hop_length: int = 256,
-    offset_frames: int = 0,     # αν θες random offset σε frames
+    offset_frames: int = 0,
     keep_residual: bool = False,
 ):
     """
-    Παράγει windows με ΑΚΡΙΒΩΣ την ίδια λογική με split_spectrogram,
-    αλλά επιστρέφει start/end και σε sec και σε samples για perfect join.
+    Get windows with the SAME way as split_spectrogram.
+    Return start/end into sec and into samples for perfect join.
     """
     if n_mel_frames <= 0 or split_length <= 0:
         return
@@ -124,7 +124,7 @@ def iter_windows_like_split_spectrogram(
             "end_sec": float(e_frame * frame_dur),
         }
 
-    # residual (αν ποτέ θες keep_residual=True όπως στο audio helper)
+    # residual
     if keep_residual and residual:
         s_frame = offset_frames + num_spectrs * split_length
         e_frame = offset_frames + num_spectrs * split_length + residual
@@ -154,8 +154,8 @@ def get_duration(path: str) -> float:
 #####################
 def sample_frame_indices(T: int, num_frames: int) -> np.ndarray:
     """
-    Uniform sampling num_frames indices σε [0, T-1].
-    Αν T < num_frames -> παίρνει όλα τα frames (χωρίς duplication).
+    Uniform sampling num_frames indices into [0, T-1].
+    If T < num_frames -> get all frames (without duplication).
     """
     if T <= 0:
         return np.zeros((0,), dtype=np.int64)

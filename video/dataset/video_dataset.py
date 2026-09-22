@@ -16,7 +16,7 @@ class TrainOneRandomClipPerEpoch(Dataset):
         self.by_vid = collections.defaultdict(list)
         for r in rows:
             vid = str(r["video_id"])
-            # αν έχουμε λίστα exclude_ids, αγνόησε αυτά τα videos
+            # If there is a list "exclude_ids", ignore these videos
             if exclude_ids is not None and vid in exclude_ids:
                 continue
             self.by_vid[vid].append(r)

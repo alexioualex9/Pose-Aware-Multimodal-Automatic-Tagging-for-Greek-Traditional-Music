@@ -126,9 +126,9 @@ The selection process is based on a quality-aware pipeline including:
 - skeleton similarity.
 
 ```bash
-python -m skeletons/main.py cr_embeddings --set train --device cuda
-python -m skeletons/main.py cr_embeddings --set val --device cuda
-python -m skeletons/main.py cr_embeddings --set test --device cuda
+python -m skeletons/main.py process_skeleton_sequences --set train --device cuda
+python -m skeletons/main.py process_skeleton_sequences --set val --device cuda
+python -m skeletons/main.py process_skeleton_sequences --set test --device cuda
 ```
 
 ---
@@ -204,13 +204,13 @@ The repository supports multiple multimodal fusion settings. In the current impl
 - **cross-attention fusion** is inspired by MulT-style cross-modal interaction.
 
 ```bash
-python -m mutimodal/transfomrer.py --dataset "lyra" --time_window "8.00" {--subset} --seed {int} --standardize --model_name {"seq_transformer_avs_masked", "seq_transformer_as_masked", "seq_transformer_vs_masked", "seq_transformer_av"} --transformer {"simple, "gated", "cros_attention"} --device {"cpu", "cuda"}
+python -m mutimodal/transformer.py --dataset "lyra" --time_window "8.00" {--subset} --seed {int} --standardize --model_name {"seq_transformer_avs_masked", "seq_transformer_as_masked", "seq_transformer_vs_masked", "seq_transformer_av"} --transformer {"simple, "gated", "cros_attention"} --device {"cpu", "cuda"}
 ```
 
 ### Evaluate a Multimodal Model
 
 ```bash
-python -m mutimodal/transfomrer.py --dataset "lyra" --time_window "8.00" {--subset} --seed {int} --standardize --model_name {"seq_transformer_avs_masked", "seq_transformer_as_masked", "seq_transformer_vs_masked", "seq_transformer_av"} --transformer {"simple, "gated", "cros_attention"} --device {"cpu", "cuda"} --eval_only
+python -m mutimodal/transformer.py --dataset "lyra" --time_window "8.00" {--subset} --seed {int} --standardize --model_name {"seq_transformer_avs_masked", "seq_transformer_as_masked", "seq_transformer_vs_masked", "seq_transformer_av"} --transformer {"simple, "gated", "cros_attention"} --device {"cpu", "cuda"} --eval_only
 ```
 
 ---

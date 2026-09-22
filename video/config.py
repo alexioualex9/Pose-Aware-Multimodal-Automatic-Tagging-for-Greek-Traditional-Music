@@ -5,7 +5,7 @@ import torch.nn as nn
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 EMBEDDINGS_DIR = os.path.join(ROOT_DIR,'extract_video_embeddings/embeddings')
-DATA_DIR = "/data/datasets/mir_datasets/lyra"
+DATA_DIR = '/data/lyra'
 MODELS_DIR = os.path.join(ROOT_DIR, 'saved_models')
 EVALUATIONS_DIR = os.path.join(ROOT_DIR, 'evaluation')
 LABELS_DIR = os.path.join(ROOT_DIR, "files_utils"  , 'labels.json')

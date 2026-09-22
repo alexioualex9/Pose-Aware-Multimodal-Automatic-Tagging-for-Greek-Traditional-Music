@@ -37,11 +37,6 @@ def normalize_skeleton(p, hip_j1=11, hip_j2=12):
     list
         Skeleton coordinates after translation normalization, returned as a
         nested Python list.
-
-    Notes
-    -----
-    This function performs only translation-based normalization.
-    It does not apply scaling, rotation, or temporal smoothing.
     """
     arr = np.asarray(p, dtype=float)
 

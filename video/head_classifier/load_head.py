@@ -8,7 +8,7 @@ from head_classifier.mlp_head import MLP
 
 sys.path.append(os.path.join(
     os.path.dirname(__file__),
-    '/Users/alexandrosalexiou/Desktop/Σχολή/Thesis/VIDEO_MODELS/extract_video_embeddings'
+    '../extract_video_embeddings'
 ))
 
 from config import MODELS_CONFIG

@@ -35,7 +35,7 @@ from training.standardize import standardization
 from utils import load_exclude_ids
 from config import EMBEDDINGS_DIR, FINETUNED_EMBEDDINGS_DIR, MODELS_CONFIG, MODELS_DIR, LABELS_DIR, LABELS_SUBSET_DIR, EXCLUDED_IDS
 
-# ---- TF32 warning μόνο σε CUDA. Σε MPS/CPU το κρύβουμε.
+# hide TF32 warnings when not using CUDA
 if torch.cuda.is_available():
     torch.set_float32_matmul_precision("high")
 else:

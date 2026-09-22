@@ -332,7 +332,6 @@ def macro_roc_curve(Y, S, n_grid=1001):
         y_c = Y[:, c]
         s_c = S[:, c]
 
-        # χρειάζεται και 0 και 1 για ROC
         if len(np.unique(y_c)) < 2:
             continue
 
@@ -340,7 +339,7 @@ def macro_roc_curve(Y, S, n_grid=1001):
         auc_c = auc(fpr_c, tpr_c)
         auc_per_class[c] = auc_c
 
-        # interpolate TPR σε κοινό grid FPR
+        # interpolate TPR in a common grid FPR
         tpr_interp = np.interp(fpr_grid, fpr_c, tpr_c)
         tpr_interp[0] = 0.0
         tprs_interp.append(tpr_interp)
@@ -468,8 +467,7 @@ def save_results(Y, S, P, used_vids, modalities, save_npz, threshold, fusion, w_
 def test_results(m, audio_model_name=None, video_model_name=None, skeleton_model_name=None, dataset=None, modalities=None, split="test",
                  auc_kind="macro", decimals=2):
     """
-    m: dict με keys όπως: report, roc_micro, roc_macro, pr_micro, pr_macro
-    auc_kind: "macro" ή "micro" -> ποιο AUC να τυπώσει (στο παράδειγμα σου είναι macro)
+    m: dict: report, roc_micro, roc_macro, pr_micro, pr_macro
     """
 
     if dataset is not None:
@@ -497,11 +495,9 @@ def test_results(m, audio_model_name=None, video_model_name=None, skeleton_model
         print(f"PR-AUC score: {m[pr_key]}")
     print()
 
-    # Μορφοποίηση classification report σε 2 δεκαδικά όπως στο παράδειγμα
+    # Convert classification report into 2 decimals
     report = m.get("report", "")
     if isinstance(report, str) and report:
-        # sklearn classification_report έχει "0.7500" κτλ.
-        # το κάνουμε "0.75" και κρατάμε στοίχιση όσο γίνεται.
         import re
         def _fmt(match):
             return f"{float(match.group(0)):.{decimals}f}"

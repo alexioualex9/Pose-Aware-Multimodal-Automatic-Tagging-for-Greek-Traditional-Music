@@ -234,7 +234,6 @@ class GMUMissingModalityFusion(nn.Module):
         z_h_s = (1.0 - z) * h_s
 
         return h, z, z_h_a, z_h_s
-#        return h, z
 
 class EmbCLSFusionTransformerASMasked_gate(nn.Module):
     """
