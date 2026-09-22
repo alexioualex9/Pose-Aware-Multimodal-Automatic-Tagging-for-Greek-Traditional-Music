@@ -58,7 +58,7 @@ All experiments in this paper are based on the **Lyra Dataset**, a dataset of Gr
 
 The full Lyra collection contains **1570 videos**. Among them, **767 videos include dancing**. Since the pose-aware setting requires at least one valid extracted skeleton clip per video, the skeleton extraction and filtering stage reduces this subset to **749 videos**, referred to as the **pose subset of Lyra dataset**.
 
-Following prior work on Lyra, this project begins from the **top-30 most frequent labels**. However, in the skeleton subset, two of these labels have zero positive support, so all experiments in this repository are conducted on the remaining **28 labels**.
+Following prior work on Lyra, this project begins from the **top-30 most frequent labels**. However, in the pose subset of Lyra dataset, two of these labels have zero positive support, so all experiments in this repository are conducted on the remaining **28 labels**.
 
 Depending on the experiment, the code may require:
 
