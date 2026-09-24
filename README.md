@@ -8,6 +8,15 @@ The implemented framework supports automatic tagging on the **top-28 labels of t
 
 ---
 
+## Reference
+
+[**Pose-Aware Multimodal Automatic Tagging for Greek Traditional Music**](https://arxiv.org/abs/2609.27094)
+*arXiv preprint arXiv:2609.27094, 2026.*
+
+* **Authors:** Alexandros Alexiou, Charilaos Papaioannou, and Alexandros Potamianos
+
+---
+
 ## Repository Structure
 
 - **detect_dance_scenes/**  
