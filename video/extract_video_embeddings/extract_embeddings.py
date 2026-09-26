@@ -53,7 +53,7 @@ def main():
     ap.add_argument("--model_name", type=str, default="slowfast50", choices=["slowfast50", "timesformer", "r21d", "resnet50", "vitb16", "videomae"])
 
     # Audio Model
-    ap.add_argument("--audio_model_name", type=str, default="vgg_ish", choices=["ast", "vgg_ish"])
+    ap.add_argument("--time_window", type=str, default="3.69", choices=["3.69", "8.00"])
 
     # Splits
     ap.add_argument("--seed", type=int, default=42, help="Random seed for train/val split and train offsets.")
@@ -80,7 +80,7 @@ def main():
     config['dataset'] = args.dataset
     config['DATA_DIR'] = Path(DATA_DIR)
     config['model_name'] = args.model_name
-    config['audio_model_name'] = args.audio_model_name
+    config['time_window'] = args.time_window
     config['device'] = torch.device(device)
     config['video_template'] = "{id}.mp4"
     config['video_dir'] = config['DATA_DIR'] / "videos"

@@ -33,7 +33,7 @@ from dataset.video_dataset import TrainOneRandomClipPerEpoch, Video_Val_Test_Dat
 from head_classifier.mlp_head import MLP
 from training.standardize import standardization
 from utils import load_exclude_ids
-from config import EMBEDDINGS_DIR, FINETUNED_EMBEDDINGS_DIR, MODELS_CONFIG, MODELS_DIR, LABELS_DIR, LABELS_SUBSET_DIR, EXCLUDED_IDS
+from config import EMBEDDINGS_DIR, MODELS_CONFIG, MODELS_DIR, LABELS_DIR, LABELS_SUBSET_DIR, EXCLUDED_IDS
 
 # hide TF32 warnings when not using CUDA
 if torch.cuda.is_available():
@@ -55,13 +55,13 @@ def main():
     ap.add_argument("--model_name", type=str, default="slowfast50", choices=["slowfast50", "timesformer", "r21d", "resnet50", "videomae", "vitb16"])
 
     # Time window in which dataset been examined
-    ap.add_argument("--time_window", type=str, default="3.69", choices=["3.69", "8.00"])
+    ap.add_argument("--time_window", type=str, default="8.00", choices=["3.69", "8.00"])
 
     # Subset or Whole Dataset
     ap.add_argument("--subset", type=bool, default=False)
 
     # Finetuned or Frozen Backbone Embeddings
-    ap.add_argument("--embs", type=str, default="frozen", choices=["finetuned","frozen"])
+    ap.add_argument("--embs", type=str, default="frozen", choices=["frozen", "finetuned"])
 
     # Seed
     ap.add_argument("--seed", type=int, default=42, choices=[42, 123, 1337, 2024, 9999])
@@ -101,26 +101,15 @@ def main():
 
 
     # Define train and validation index
-    if args.embs == "frozen":
-       train_index = os.path.join(EMBEDDINGS_DIR, config['dataset'], config['model_name'], 'train')
-       val_index = os.path.join(EMBEDDINGS_DIR, config['dataset'], config['model_name'], 'val')
+    train_index = os.path.join(EMBEDDINGS_DIR, config['dataset'], config['model_name'], 'train')
+    val_index = os.path.join(EMBEDDINGS_DIR, config['dataset'], config['model_name'], 'val')
 
-       if args.subset == True:
-          train_index = os.path.join(train_index, "index_danced_28.json")
-          val_index = os.path.join(val_index, "index_danced_28.json")
-       else:
-          train_index = os.path.join(train_index, "index.json")
-          val_index = os.path.join(val_index, "index.json")
+    if args.subset == True:
+       train_index = os.path.join(train_index, "index_danced_28.json")
+       val_index = os.path.join(val_index, "index_danced_28.json")
     else:
-       train_index = os.path.join(FINETUNED_EMBEDDINGS_DIR, config['dataset'], config['model_name'], 'train')
-       val_index = os.path.join(FINETUNED_EMBEDDINGS_DIR, config['dataset'], config['model_name'], 'val')
-
-       if args.subset == True:
-          train_index = os.path.join(train_index, "index_danced_28.json")
-          val_index = os.path.join(val_index, "index_danced_28.json")
-       else:
-          train_index = os.path.join(train_index, "index.json")
-          val_index = os.path.join(val_index, "index.json")
+       train_index = os.path.join(train_index, "index.json")
+       val_index = os.path.join(val_index, "index.json")
 
 
     # ---------- TRAINING ----------

@@ -63,10 +63,10 @@ def extract_emb(
 
     sr = SPECTROGRAMS_ATTRIBUTES["audio_sr"]          # 16000
     hop_length = SPECTROGRAMS_ATTRIBUTES["hop_length"]       # 256
-    if config['audio_model_name'] == "vgg_ish":
+    if config['time_window'] == "3.69":
        input_length_secs = MODELS_CONFIG["lyra"]["vgg_ish"]["input_length_in_secs"]
        split_length_frames = int(round(input_length_secs * sr / hop_length)) - 1
-    elif config['audio_model_name'] == "ast":
+    elif config['time_window'] == "8.00":
        input_length_secs = MODELS_CONFIG["lyra"]["ast"]["input_length_in_secs"]
        split_length_frames = int(round(input_length_secs * sr / hop_length))
     else:

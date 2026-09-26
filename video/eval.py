@@ -19,7 +19,7 @@ from utils import compute_global_metrics
 from dataset.video_dataset import Video_Val_Test_Dataset
 from head_classifier.load_head import load_pt_head
 from utils import load_exclude_ids, save_metrics
-from config import EMBEDDINGS_DIR, FINETUNED_EMBEDDINGS_DIR, MODELS_CONFIG, MODELS_DIR, FINETUNED_MODELS_DIR, EVALUATIONS_DIR, LABELS_DIR, LABELS_SUBSET_DIR, EXCLUDED_IDS
+from config import EMBEDDINGS_DIR, MODELS_CONFIG, MODELS_DIR, FINETUNED_MODELS_DIR, EVALUATIONS_DIR, LABELS_DIR, LABELS_SUBSET_DIR, EXCLUDED_IDS
 
 try:
     from torch.serialization import add_safe_globals, safe_globals
@@ -55,7 +55,7 @@ def main():
     ap.add_argument("--subset", type=bool, default=False)
 
     # Time window in which dataset been examined
-    ap.add_argument("--time_window", type=str, default="3.69", choices=["3.69", "8.00"])
+    ap.add_argument("--time_window", type=str, default="8.00", choices=["3.69", "8.00"])
 
     # Frozen or Finetuned Embeddings
     ap.add_argument("--embs", type=str, default="frozen", choices=["frozen", "finetuned"])
@@ -78,12 +78,8 @@ def main():
     config['device'] = torch.device(args.device)
 
     # Fix paths and parameters"
-    if args.embs == "frozen":
-       embs_folder = "frozen"
-       test_index = os.path.join(EMBEDDINGS_DIR, config['dataset'], config['model_name'], 'test')
-    else:
-       embs_folder = "finetuned"
-       test_index = os.path.join(FINETUNED_EMBEDDINGS_DIR, config['dataset'], config['model_name'], 'test')
+    embs_folder = "frozen"
+    test_index = os.path.join(EMBEDDINGS_DIR, config['dataset'], config['model_name'], 'test')
 
     if args.subset:
        dataset_folder = "subset"
