@@ -88,7 +88,7 @@ def apply_alphapose(vid_path):
     os.makedirs(segment_dir, exist_ok=True)
 
     cmd = [
-        "python",
+        sys.executable,
         "scripts/demo_inference.py",
         "--cfg",
         A_EXPERIMENT_CONFIG,
@@ -100,7 +100,20 @@ def apply_alphapose(vid_path):
         segment_dir,
     ]
 
-    subprocess.run(cmd, cwd=ALPHAPOSE_DIR, check=True)
+    env = os.environ.copy()
+    previous_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = (
+        ALPHAPOSE_DIR
+        if not previous_pythonpath
+        else ALPHAPOSE_DIR + os.pathsep + previous_pythonpath
+    )
+
+    subprocess.run(
+        cmd,
+        cwd=ALPHAPOSE_DIR,
+        env=env,
+        check=True,
+    )
 
     json_path = os.path.join(segment_dir, "alphapose-results.json")
     if not os.path.exists(json_path):
