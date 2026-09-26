@@ -56,7 +56,7 @@ def create_parser():
     # ---- train ----
     t = sub.add_parser("train", help="Train ST-GCN model")
 
-    t.add_argument("--model_name", type=str, default="STGCN", choices=["STGCN", "CTRGCN", "CTRGCN_FT"])
+    t.add_argument("--model_name", type=str, default="STGCN", choices=["STGCN"])
     t.add_argument("--time_window", default='3.69', choices=["3.69", "8.00"],help="defines window time")
     t.add_argument("--dataset", type=str, default="lyra")
     t.add_argument("--finetuning", type=bool, default=False)
@@ -67,7 +67,7 @@ def create_parser():
     # ---- eval ----
     e = sub.add_parser("eval", help="Evaluate a saved model on an index.json (video-level)")
 
-    e.add_argument("--model_name", type=str, default="STGCN", choices=["STGCN", "CTRGCN", "CTRGCN_FT"])
+    e.add_argument("--model_name", type=str, default="STGCN", choices=["STGCN"])
     e.add_argument("--time_window", default='3.69', choices=["3.69", "8.00"],help="defines window time")
     e.add_argument("--dataset", type=str, default="lyra")
     e.add_argument("--pool", type=str, default="topk", choices=["mean", "topk"])

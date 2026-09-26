@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from collections import deque
-from utils import COCO17_EDGES, _bfs_dist, normalize_digraph, build_coco17_A_subsets
+from skel_utils import COCO17_EDGES, _bfs_dist, normalize_digraph, build_coco17_A_subsets
 
 
 # -------------------- ST-GCN-like Model ---------------------

@@ -149,7 +149,7 @@ def extract_embeddings(
 
 def main():
     ap = argparse.ArgumentParser("Extract per-video skeleton embeddings (clip tokens).")
-    ap.add_argument("--model_name", type=str, default="STGCN", choices=['STGCN', 'CTRGCN'])
+    ap.add_argument("--model_name", type=str, default="STGCN", choices=['STGCN'])
     ap.add_argument("--time_window", type=str, default="3.69", choices=['3.69', '8.00'])
     ap.add_argument("--dataset", type=str, default="lyra")
     ap.add_argument("--device", default="cpu", choices=["cpu", "cuda", "mps"])
