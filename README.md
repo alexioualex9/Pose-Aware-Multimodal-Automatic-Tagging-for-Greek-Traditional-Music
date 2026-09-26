@@ -36,6 +36,17 @@ The implemented framework supports automatic tagging on the **top-28 labels of t
 
 ---
 
+## Code Attribution
+
+The audio processing and modeling pipeline is adapted from the publicly available [**CCML repository**](https://github.com/pxaris/ccml). The original code was modified to support the experimental setup and its integration with the video and skeleton pipelines used in this work.
+
+To use the audio pipeline, clone the CCML repository into the root directory of this repository:
+
+```bash
+git clone https://github.com/pxaris/ccml.git ccml
+
+---
+
 ## Installation
 
 The project was developed using **Python 3.8.20** and **PyTorch 2.2.0** with **CUDA 11.8**.
@@ -87,7 +98,7 @@ This repository does **not necessarily include the raw datasets** used in the ex
 The following script fine-tunes the dance-scene detection model. The detector is trained on **1-second clips**.
 
 ```bash
-python detect_dance_scenes/train_dance_detector.py \
+python detect_dance_scenes.train_dance_detector.py \
   --video-dir <VIDEO_DIR> \
   --labels-file <LABELS_FILE> \
   --output-dir <OUTPUT_DIR> \
@@ -100,7 +111,7 @@ python detect_dance_scenes/train_dance_detector.py \
 The following script applies a trained detector to identify dance-related scenes in video recordings.
 
 ```bash
-python -m detect_dance_scenes/main.py \
+python -m detect_dance_scenes.main.py \
   --video-dir <VIDEO_DIR> \
   --model-path <MODEL_PATH> \
   --output-dir <OUTPUT_DIR>
@@ -121,7 +132,7 @@ This stage includes:
 5. storing keypoints together with metadata in `.json` format.
 
 ```bash
-python -m extract_skeletons/main.py
+python -m extract_skeletons.main
 ```
 
 ---
@@ -141,9 +152,9 @@ The selection process is based on a quality-aware pipeline including:
 - skeleton similarity.
 
 ```bash
-python -m skeletons/main.py process_skeleton_sequences --set train --device cuda
-python -m skeletons/main.py process_skeleton_sequences --set val --device cuda
-python -m skeletons/main.py process_skeleton_sequences --set test --device cuda
+python skeletons/main.py process_skeleton_sequences --set train --device cuda
+python skeletons/main.py process_skeleton_sequences --set val --device cuda
+python skeletons/main.py process_skeleton_sequences --set test --device cuda
 ```
 
 ---
@@ -161,13 +172,13 @@ The skeleton-based model used in this work is a lightweight GCN architecture tha
 In contrast to deeper adaptive variants, the graph adjacency remains fixed throughout training, which keeps the model lightweight and helps reduce overfitting when noisy skeleton inputs are used.
 
 ```bash
-python -m skeletons/main.py train --model_name STGCN --device cuda
+python skeletons/main.py train --model_name STGCN --device cuda
 ```
 
 ### Evaluate the STGCN-like Skeleton Model
 
 ```bash
-python -m skeletons/main.py eval --model_name STGCN --device cuda
+python skeletons/main.py eval --model_name STGCN --device cuda
 ```
 
 ---
@@ -177,7 +188,7 @@ python -m skeletons/main.py eval --model_name STGCN --device cuda
 In this setup, video embeddings are extracted using one of five pretrained video models.
 
 ```bash
-python -m video/extract_video_embeddings/extract_embeddings.py --dataset "lyra" --audio_model_name "ast" --seed {42, 123, 1337, 2024, 9999} --model_name {"slowfast50", "timesformer", "vitb16", "resnet50", "videomae"} --device {"cpu", "cuda"}
+python video/extract_video_embeddings/extract_embeddings.py --dataset "lyra" --time_window {"3.69", "8.00"} --seed {42, 123, 1337, 2024, 9999} --model_name {"slowfast50", "timesformer", "vitb16", "resnet50", "videomae"} --device {"cpu", "cuda"}
 ```
 
 ---
@@ -187,7 +198,7 @@ python -m video/extract_video_embeddings/extract_embeddings.py --dataset "lyra" 
 In this setup, the video model is trained using frozen embeddings extracted in the previous step.
 
 ```bash
-python -m video/train.py --dataset "lyra" --time_window "8.00" --subset {"True", "False"} --embs "frozen" --seed {42, 123, 1337, 2024, 9999} --model_name {"slowfast50", "timesformer", "vitb16", "resnet50", "videomae"} --device {"cpu", "cuda"}
+python video/train.py --dataset "lyra" --time_window "8.00" --subset {"True", "False"} --embs "frozen" --seed {42, 123, 1337, 2024, 9999} --model_name {"slowfast50", "timesformer", "vitb16", "resnet50", "videomae"} --device {"cpu", "cuda"}
 ```
 
 ---
@@ -195,17 +206,30 @@ python -m video/train.py --dataset "lyra" --time_window "8.00" --subset {"True",
 ### Evaluate the Video Model
 
 ```bash
-python -m video/eval.py --dataset "lyra" --time_window "8.00" --subset {"True", "False"} --embs "frozen" --seed {int} --model_name {"slowfast50", "timesformer", "vitb16", "resnet50", "videomae"} --device {"cpu", "cuda"}
+python video/eval.py --dataset "lyra" --time_window "8.00" --subset {"True", "False"} --embs "frozen" --seed {42, 123, 1337, 2024, 9999} --model_name {"slowfast50", "timesformer", "vitb16", "resnet50", "videomae"} --device {"cpu", "cuda"}
 ```
 
 ---
 
 ### Late Fusion
 
-Late fusion is applied by aggregating the output probabilities of each modality after extracting modality-specific predictions.
+The `store_audio_p`, `store_video_p`, and `store_skel_p` scripts generate and store track-level probability predictions for the audio, video, and skeleton modalities, respectively. These predictions are then combined by the late-fusion script.
 
 ```bash
-python -m video/late_fusion.py --modalities {'a,v', 'a,s', 'v,s', 'a,v,s'} --fusion {"weighted", "mean", "sum"} --weights {"equal", "f1_macro"} --dataset "lyra" --time_window "8.00" {--subset} --seed {int} --video_model_name {"slowfast50", "timesformer", "vitb16", "resnet50", "videomae"} --skeleton_model_name "STGCN"
+python -m multimodal.late_fusion.store_audio_p --dataset "lyra" --time_window "8.00" {--subset} --model_name {"ast", "vgg_ish"} --device {'cpu', 'cuda'}
+```
+
+```bash
+python -m multimodal.late_fusion.store_video_p --dataset "lyra" --time_window "8.00" {--subset} --seed {42, 123, 1337, 2024, 9999} --video_model_name {"slowfast50", "timesformer", "vitb16", "resnet50", "videomae"} --device {'cpu', 'cuda'}
+```
+
+```bash
+python -m multimodal.late_fusion.store_skel_p --dataset "lyra" --time_window "8.00" --seed {42, 123, 1337, 2024, 9999} --device {'cpu', 'cuda'}
+```
+
+
+```bash
+python multimodal/late_fusion.py --modalities {'a,v', 'a,s', 'v,s', 'a,v,s'} --fusion {"weighted", "mean", "sum"} --weights {"equal", "f1_macro"} --dataset "lyra" --time_window "8.00" {--subset} --seed {42, 123, 1337, 2024, 9999} --video_model_name {"slowfast50", "timesformer", "vitb16", "resnet50", "videomae"} --skeleton_model_name "STGCN"
 ```
 
 ---
@@ -219,13 +243,13 @@ The repository supports multiple multimodal fusion settings. In the current impl
 - **cross-attention fusion** is inspired by MulT-style cross-modal interaction.
 
 ```bash
-python -m mutimodal/transformer.py --dataset "lyra" --time_window "8.00" {--subset} --seed {int} --standardize --model_name {"seq_transformer_avs_masked", "seq_transformer_as_masked", "seq_transformer_vs_masked", "seq_transformer_av"} --transformer {"simple, "gated", "cros_attention"} --device {"cpu", "cuda"}
+python mutimodal/transformer.py --dataset "lyra" --time_window "8.00" {--subset} --seed {42, 123, 1337, 2024, 9999} --standardize --model_name {"seq_transformer_avs_masked", "seq_transformer_as_masked", "seq_transformer_vs_masked", "seq_transformer_av"} --transformer {"simple, "gated", "cros_attention"} --device {"cpu", "cuda"}
 ```
 
 ### Evaluate a Multimodal Model
 
 ```bash
-python -m mutimodal/transformer.py --dataset "lyra" --time_window "8.00" {--subset} --seed {int} --standardize --model_name {"seq_transformer_avs_masked", "seq_transformer_as_masked", "seq_transformer_vs_masked", "seq_transformer_av"} --transformer {"simple, "gated", "cros_attention"} --device {"cpu", "cuda"} --eval_only
+python mutimodal/transformer.py --dataset "lyra" --time_window "8.00" {--subset} --seed {42, 123, 1337, 2024, 9999} --standardize --model_name {"seq_transformer_avs_masked", "seq_transformer_as_masked", "seq_transformer_vs_masked", "seq_transformer_av"} --transformer {"simple, "gated", "cros_attention"} --device {"cpu", "cuda"} --eval_only
 ```
 
 ---
