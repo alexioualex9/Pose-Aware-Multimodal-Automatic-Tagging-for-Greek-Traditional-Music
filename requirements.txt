@@ -22,7 +22,7 @@ pytorchvideo==0.1.5
 
 # Models and general utilities
 transformers==4.46.3
-timm==0.4.5
+timm==0.1.20
 
 # Utilities and visualazation
 tqdm==4.67.1
