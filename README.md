@@ -44,6 +44,7 @@ To use the audio pipeline, clone the CCML repository into the root directory of 
 
 ```bash
 git clone https://github.com/pxaris/ccml.git ccml
+```
 
 ---
 
