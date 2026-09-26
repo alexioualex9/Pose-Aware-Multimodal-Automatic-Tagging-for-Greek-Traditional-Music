@@ -99,7 +99,7 @@ This repository does **not necessarily include the raw datasets** used in the ex
 The following script fine-tunes the dance-scene detection model. The detector is trained on **1-second clips**.
 
 ```bash
-python detect_dance_scenes.train_dance_detector.py \
+python detect_dance_scenes/train_dance_detector.py \
   --video-dir <VIDEO_DIR> \
   --labels-file <LABELS_FILE> \
   --output-dir <OUTPUT_DIR> \
@@ -112,7 +112,7 @@ python detect_dance_scenes.train_dance_detector.py \
 The following script applies a trained detector to identify dance-related scenes in video recordings.
 
 ```bash
-python -m detect_dance_scenes.main.py \
+python detect_dance_scenes/main.py \
   --video-dir <VIDEO_DIR> \
   --model-path <MODEL_PATH> \
   --output-dir <OUTPUT_DIR>
