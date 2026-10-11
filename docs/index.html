@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Interactive explorer for pose-aware multimodal music tagging results.">
+    <title>Pose-Aware Music Tagging Results Explorer</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <p class="eyebrow hero-eyebrow">Pose-Aware Multimodal Music Tagging</p>
+        <h1>Pose-Aware Music Tagging Results Explorer</h1>
+        <p class="lead">Exploring multimodal automatic tagging for Greek traditional music using audio, video, and dancer-pose representations.</p>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="intro" aria-labelledby="about-heading">
+        <p class="eyebrow">Research overview</p>
+        <h2 id="about-heading">Music tagging informed by dance motion</h2>
+        <p id="dataset-description">Loading experiment information…</p>
+      </section>
+
+      <section class="pose-story" aria-labelledby="pose-story-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Pose extraction</p>
+            <h2 id="pose-story-heading">From dance scene to skeleton representation</h2>
+          </div>
+        </div>
+        <p class="story-intro">Dance scenes are detected in broadcast footage. The pipeline tracks people, selects a primary dancer, estimates body keypoints, and retains a quality-filtered pose representation for motion analysis.</p>
+
+        <div class="extraction-grid">
+          <article class="step-card">
+            <span class="step-number">01</span>
+            <img src="assets/pose-extraction/dance-scene.png" alt="Original dance scene containing dancers and surrounding visual context.">
+            <h3>Dance scene</h3>
+            <p>A dance-related scene is identified in the original video recording.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">02</span>
+            <img src="assets/pose-extraction/cropped-frame.png" alt="Cropped video frame focusing on the selected primary dancer.">
+            <h3>Primary dancer</h3>
+            <p>Tracking identifies a primary dancer for downstream pose extraction.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">03</span>
+            <img src="assets/pose-extraction/alpapose-overlay.png" alt="Primary dancer with AlphaPose body keypoints and skeleton overlay.">
+            <h3>AlphaPose keypoints</h3>
+            <p>AlphaPose estimates 17 COCO body joints for the selected dancer.</p>
+          </article>
+          <article class="step-card skeleton-card">
+            <span class="step-number">04</span>
+            <img src="assets/pose-extraction/isolated-skeleton.png" alt="Isolated 17-joint skeleton representation of a dancer.">
+            <h3>Skeleton representation</h3>
+            <p>Quality-filtered pose coordinates and motion features form the input.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="motion-section" aria-labelledby="motion-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Motion over time</p>
+            <h2 id="motion-heading">A dancer represented as a skeleton sequence</h2>
+          </div>
+        </div>
+        <p class="story-intro">The skeleton encoder receives a temporal sequence rather than one static pose. Consecutive skeleton frames capture the dancer's evolving motion.</p>
+        <div class="motion-grid">
+          <figure><img src="assets/skeleton-motion/frame-104.png" alt="First pose in the selected motion sequence."><figcaption>Motion step 1</figcaption></figure>
+          <figure><img src="assets/skeleton-motion/frame-106.png" alt="Second pose in the selected motion sequence."><figcaption>Motion step 2</figcaption></figure>
+          <figure><img src="assets/skeleton-motion/frame-109.png" alt="Third pose in the selected motion sequence."><figcaption>Motion step 3</figcaption></figure>
+          <figure><img src="assets/skeleton-motion/frame-110.png" alt="Fourth pose in the selected motion sequence."><figcaption>Motion step 4</figcaption></figure>
+        </div>
+      </section>
+
+      <section class="explorer" aria-labelledby="explorer-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Model explorer</p>
+            <h2 id="explorer-heading">Inspect one configuration</h2>
+          </div>
+        </div>
+        <div class="controls">
+          <label for="model-select">Model configuration</label>
+          <select id="model-select" disabled><option>Loading configurations…</option></select>
+        </div>
+        <div id="selected-result" class="selected-result" aria-live="polite"></div>
+      </section>
+
+      <section class="comparison-section" aria-labelledby="comparison-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">All configurations</p>
+            <h2 id="comparison-heading">Macro ROC–AUC comparison</h2>
+          </div>
+          <p id="metric-label" class="metric-label"></p>
+        </div>
+        <div id="comparison-chart" class="comparison-chart" role="img" aria-label="Model comparison chart"></div>
+      </section>
+
+      <section class="architecture-section" aria-labelledby="architecture-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">End-to-end system</p>
+            <h2 id="architecture-heading">Multimodal tagging architecture</h2>
+          </div>
+        </div>
+        <p class="story-intro">Audio, video, and pose-derived skeleton representations are temporally aligned, fused, and aggregated at track level to predict multiple semantic music tags.</p>
+        <figure class="architecture-figure">
+          <img src="assets/architecture.png" alt="Architecture of the multimodal tagging system, from audio, video, and skeleton encoders through fusion and track-level classification.">
+          <figcaption>Overview of the pose-aware multimodal tagging framework.</figcaption>
+        </figure>
+      </section>
+    </main>
+
+    <footer><div class="container">Pose-Aware Multimodal Automatic Tagging for Greek Traditional Music</div></footer>
+    <script src="app.js"></script>
+  </body>
+</html>
