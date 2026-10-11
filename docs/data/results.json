@@ -1,0 +1,56 @@
+{
+  "title": "Pose-Aware Music Tagging Results Explorer",
+  "dataset": "Lyra pose subset: 749 Greek traditional-music tracks with valid pose streams, evaluated across 28 multilabel semantic tags.",
+  "metric": "Macro ROC–AUC",
+  "models": [
+    {
+      "id": "audio",
+      "name": "Audio (AST)",
+      "modalities": ["Audio"],
+      "roc_auc": 0.821,
+      "description": "Audio-only baseline using Audio Spectrogram Transformer representations."
+    },
+    {
+      "id": "video",
+      "name": "Video (SlowFast-50)",
+      "modalities": ["Video"],
+      "roc_auc": 0.759,
+      "description": "Video-only baseline using frozen SlowFast-50 representations."
+    },
+    {
+      "id": "skeleton",
+      "name": "Skeleton (ST-GCN)",
+      "modalities": ["Skeleton"],
+      "roc_auc": 0.586,
+      "description": "Pose-based baseline using dancer skeleton sequences."
+    },
+    {
+      "id": "audio_video",
+      "name": "Audio + Video",
+      "modalities": ["Audio", "Video"],
+      "roc_auc": 0.852,
+      "description": "Bimodal fusion of acoustic and visual information."
+    },
+    {
+      "id": "audio_skeleton",
+      "name": "Audio + Skeleton",
+      "modalities": ["Audio", "Skeleton"],
+      "roc_auc": 0.839,
+      "description": "Bimodal fusion of audio and dancer-motion representations."
+    },
+    {
+      "id": "video_skeleton",
+      "name": "Video + Skeleton",
+      "modalities": ["Video", "Skeleton"],
+      "roc_auc": 0.798,
+      "description": "Bimodal fusion of visual context and dancer-motion information."
+    },
+    {
+      "id": "trimodal",
+      "name": "Audio + Video + Skeleton",
+      "modalities": ["Audio", "Video", "Skeleton"],
+      "roc_auc": 0.864,
+      "description": "Best overall configuration, combining acoustic, visual, and pose-derived cues."
+    }
+  ]
+}
