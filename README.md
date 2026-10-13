@@ -21,7 +21,7 @@ The implemented framework supports automatic tagging on the **top-28 labels of t
 
 Explore the pose-extraction pipeline, skeleton motion representations, and the main multimodal tagging results through the web interface:
 
-[Open the Pose-Aware Music Tagging Results Explorer](https://alexioualex9.github.io/Pose-Aware-Multimodal-Automatic-Tagging-for-Greek-Traditional-Music/)
+[Pose-Aware Music Tagging Results](https://alexioualex9.github.io/Pose-Aware-Multimodal-Automatic-Tagging-for-Greek-Traditional-Music/)
 
 
 ## Repository Structure
